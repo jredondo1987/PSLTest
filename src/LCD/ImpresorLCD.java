@@ -159,6 +159,7 @@ public class ImpresorLCD {
      * @param comando Entrada que contiene el size del segmento de los digito y
      * el numero a imprimir
      * @param espacioDig Espacio Entre digitos
+     * @return 
      */
     public void procesar(String comando, int espacioDig) {
 
@@ -211,7 +212,7 @@ public class ImpresorLCD {
      *
      * @param cadena Cadena
      */
-    static boolean isNumeric(String cadena) {
+    public static boolean isNumeric(String cadena) {
         try {
             parseInt(cadena);
             return true;
