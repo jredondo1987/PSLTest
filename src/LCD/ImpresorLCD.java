@@ -4,6 +4,8 @@ import static java.lang.Character.isDigit;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
 import static java.lang.System.out;
+
+import java.awt.font.NumericShaper;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
@@ -66,7 +68,38 @@ public class ImpresorLCD {
 	
 	private void adicionarSegmento(int segmento){
 		
-		Segmento segmento = new Segmento(segmento);
+		switch (segmento) {
+		case 1:
+			adicionarLinea(this.matrizImpr, this.pf1, POSICION_Y,
+					this.size, CARACTER_VERTICAL);
+			break;
+		case 2:
+			adicionarLinea(this.matrizImpr, this.pf2, POSICION_Y,
+					this.size, CARACTER_VERTICAL);
+			break;
+		case 3:
+			adicionarLinea(this.matrizImpr, this.pf5, POSICION_Y,
+					this.size, CARACTER_VERTICAL);
+			break;
+		case 4:
+			adicionarLinea(this.matrizImpr, this.pf4, POSICION_Y,
+					this.size, CARACTER_VERTICAL);
+			break;
+		case 5:
+			adicionarLinea(this.matrizImpr, this.pf1, POSICION_X,
+					this.size, CARACTER_HORIZONTAL);
+			break;	
+		case 6:
+			adicionarLinea(this.matrizImpr, this.pf2, POSICION_X,
+					this.size, CARACTER_HORIZONTAL);
+			break;
+		case 7:
+			adicionarLinea(this.matrizImpr, this.pf3, POSICION_X,
+					this.size, CARACTER_HORIZONTAL);
+			break;	
+		default:
+			break;
+		}
 	}
 	
 	/**
@@ -186,5 +219,58 @@ public class ImpresorLCD {
     * @param espacioDig Espacio Entre digitos
     */
 	
+	public void procesar(String comando, int espacioDig){
+		
+		String[] parametros;
+		
+		int tam;
+		
+		if(!comando.contains(",")){
+			throw new IllegalArgumentException("Cadena" + comando
+					+ "no contiene caracter , ");
+		}
+		
+		//Se hace split de la cadena
+		parametros = comando.split(",");
+		
+		//Validad la cantidad de parametros
+		if(parametros.length > 2 || parametros.length < 2){
+			throw new IllegalArgumentException("Cadena" + comando
+					+ "contiene mas caracteres o" + 
+					"menos de los necesarios");
+		}
+		
+		//Valida que el parametro size sea un numerico
+		if(isNumeric(parametros[0])){
+			tam = parseInt(parametros[0]);
+			
+			//se valida que el size este entre 1 y 10
+			if(tam < 1 || tam > 10){
+				throw new IllegalArgumentException("El parametro size [" + tam
+						+ "] debe estar entre 1 y 10");
+			}
+		}else{
+			throw new IllegalArgumentException("Parametro size [" + parametros[0]
+					+ "] no es un numero");
+		}
+		
+		//Realiza la impresion del numero
+		imprimirNumero(tam, parametros[1], espacioDig);
+	}
 	
+	/**
+    * Metodo encargado de validar si una cadena es numerica
+    * @param cadena Cadena
+    */
+	
+	static boolean isNumeric(String cadena){
+		try{
+			parseInt(cadena);
+			return true;
+		}catch(NumberFormatException e){
+			return false;
+		}
+	}
+	
+	private static final Logger LOG = Logger.getLogger(ImpresorLCD.class.getName());
 }
